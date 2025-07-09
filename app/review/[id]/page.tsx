@@ -112,5 +112,3 @@ ${review.code}
     </main>
   );
 }
-
-
