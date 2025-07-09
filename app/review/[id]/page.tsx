@@ -2,10 +2,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/Button";
 
-type PageProps = {
-  params: { id: string };
-};
-
 type Review = {
   id: number;
   code: string;
@@ -15,7 +11,11 @@ type Review = {
   model?: string;
 };
 
-export default async function ReviewDetailPage({ params }: PageProps) {
+export default async function ReviewDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/review/${params.id}`,
     {
@@ -40,17 +40,6 @@ export default async function ReviewDetailPage({ params }: PageProps) {
       </p>
 
       <div className="flex gap-3 mb-6 flex-wrap">
-        <form
-          action={async () => {
-            "use server";
-            // this must be handled on client, but placeholder
-          }}
-        >
-          <Button type="submit" variant="secondary">
-            📋 Copy Feedback (dev only)
-          </Button>
-        </form>
-
         <Link href="/dashboard">
           <Button variant="outline">← Back to Dashboard</Button>
         </Link>
@@ -72,3 +61,4 @@ export default async function ReviewDetailPage({ params }: PageProps) {
     </main>
   );
 }
+
