@@ -1,5 +1,5 @@
-import { notFound, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/Button";
 
 type PageProps = {
@@ -15,28 +15,19 @@ type Review = {
   model?: string;
 };
 
-export default function ReviewDetailPage({ params }: PageProps) {
-  const [review, setReview] = useState<Review | null>(null);
-  const router = useRouter();
+export default async function ReviewDetailPage({ params }: PageProps) {
+  const res = await fetch(
+    `https://your-backend-url.com/api/review/${params.id}`,
+    {
+      cache: "no-store", // optional: always get fresh data
+    }
+  );
 
-  useEffect(() => {
-    const fetchReview = async () => {
-      const res = await fetch(
-        `https://your-backend-url.com/api/review/${params.id}`
-      );
-      if (!res.ok) return notFound();
+  if (!res.ok) return notFound();
 
-      const data = await res.json();
-      setReview(data);
-    };
+  const review: Review = await res.json();
 
-    fetchReview();
-  }, [params.id]);
-
-  if (!review) return <p className="p-6 text-sm">Loading...</p>;
-
-  const downloadMarkdown = () => {
-    const markdown = `# CodeCoach Review
+  const markdown = `# CodeCoach Review
 
 **Language:** ${review.language}  
 **Model:** ${review.model || "GPT-4"}  
@@ -58,19 +49,6 @@ ${review.feedback}
 ${review.code}
 \`\`\`
 `;
-    const blob = new Blob([markdown], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `codecoach-review-${review.id}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const copyFeedback = async () => {
-    await navigator.clipboard.writeText(review.feedback);
-    alert("Feedback copied to clipboard!");
-  };
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12 text-foreground">
@@ -85,15 +63,35 @@ ${review.code}
       </p>
 
       <div className="flex gap-3 mb-6 flex-wrap">
-        <Button onClick={copyFeedback} variant="secondary">
-          📋 Copy Feedback
-        </Button>
-        <Button onClick={downloadMarkdown} variant="outline">
-          📄 Export to Markdown
-        </Button>
-        <Button variant="outline" onClick={() => router.push("/dashboard")}>
-          ← Back to Dashboard
-        </Button>
+        <form
+          action={() => {
+            navigator.clipboard.writeText(review.feedback);
+          }}
+        >
+          <Button type="submit" variant="secondary">
+            📋 Copy Feedback
+          </Button>
+        </form>
+
+        <form
+          action={() => {
+            const blob = new Blob([markdown], { type: "text/markdown" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `codecoach-review-${review.id}.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+          }}
+        >
+          <Button type="submit" variant="outline">
+            📄 Export to Markdown
+          </Button>
+        </form>
+
+        <Link href="/dashboard">
+          <Button variant="outline">← Back to Dashboard</Button>
+        </Link>
       </div>
 
       <section className="mb-6">
