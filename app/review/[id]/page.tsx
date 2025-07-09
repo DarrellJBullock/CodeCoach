@@ -17,38 +17,15 @@ type Review = {
 
 export default async function ReviewDetailPage({ params }: PageProps) {
   const res = await fetch(
-    `https://your-backend-url.com/api/review/${params.id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/review/${params.id}`,
     {
-      cache: "no-store", // optional: always get fresh data
+      cache: "no-store",
     }
   );
 
   if (!res.ok) return notFound();
 
   const review: Review = await res.json();
-
-  const markdown = `# CodeCoach Review
-
-**Language:** ${review.language}  
-**Model:** ${review.model || "GPT-4"}  
-**Date:** ${new Date(review.created_at).toLocaleString()}
-
----
-
-## 🧠 AI Feedback
-
-\`\`\`
-${review.feedback}
-\`\`\`
-
----
-
-## 💻 Submitted Code
-
-\`\`\`${review.language}
-${review.code}
-\`\`\`
-`;
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12 text-foreground">
@@ -64,28 +41,13 @@ ${review.code}
 
       <div className="flex gap-3 mb-6 flex-wrap">
         <form
-          action={() => {
-            navigator.clipboard.writeText(review.feedback);
+          action={async () => {
+            "use server";
+            // this must be handled on client, but placeholder
           }}
         >
           <Button type="submit" variant="secondary">
-            📋 Copy Feedback
-          </Button>
-        </form>
-
-        <form
-          action={() => {
-            const blob = new Blob([markdown], { type: "text/markdown" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `codecoach-review-${review.id}.md`;
-            a.click();
-            URL.revokeObjectURL(url);
-          }}
-        >
-          <Button type="submit" variant="outline">
-            📄 Export to Markdown
+            📋 Copy Feedback (dev only)
           </Button>
         </form>
 
