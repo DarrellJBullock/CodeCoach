@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Brand Colors */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222 47% 10%;
+
+  --primary: 231 60% 28%; /* Deep indigo */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 270 83% 62%; /* Vibrant violet */
+  --accent: 210 75% 68%; /* Soft sky blue */
+
+  --border: 220 14% 90%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 20% 40%;
+}
+
+.dark {
+  --background: 231 47% 8%;
+  --foreground: 210 20% 98%;
+
+  --primary: 231 60% 35%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 270 83% 70%;
+  --accent: 210 75% 75%;
+
+  --border: 215 20% 22%;
+  --muted: 215 20% 12%;
+  --muted-foreground: 215 20% 70%;
+}
+
+/* Buttons */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center font-medium rounded-2xl px-5 py-2.5 text-sm shadow-sm transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-white hover:bg-secondary/90;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-black hover:bg-accent/90;
+  }
+
+  .btn-outline {
+    @apply border border-border bg-transparent text-foreground hover:bg-muted;
+  }
+
+  nav a {
+    @apply hover:text-foreground transition-colors duration-150;
+  }
+}
