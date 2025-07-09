@@ -4,6 +4,10 @@ import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/Button";
 
+type PageProps = {
+  params: { id: string };
+};
+
 type Review = {
   id: number;
   code: string;
@@ -13,11 +17,7 @@ type Review = {
   model?: string;
 };
 
-export default function ReviewDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function ReviewDetailPage({ params }: PageProps) {
   const [review, setReview] = useState<Review | null>(null);
   const router = useRouter();
 
