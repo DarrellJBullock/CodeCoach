@@ -1,5 +1,3 @@
-"use client";
-
 import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/Button";
@@ -23,7 +21,9 @@ export default function ReviewDetailPage({ params }: PageProps) {
 
   useEffect(() => {
     const fetchReview = async () => {
-      const res = await fetch(`http://localhost:8000/api/review/${params.id}`);
+      const res = await fetch(
+        `https://your-backend-url.com/api/review/${params.id}`
+      );
       if (!res.ok) return notFound();
 
       const data = await res.json();
@@ -91,7 +91,7 @@ ${review.code}
         <Button onClick={downloadMarkdown} variant="outline">
           📄 Export to Markdown
         </Button>
-        <Button variant="ghost" onClick={() => router.push("/dashboard")}>
+        <Button variant="outline" onClick={() => router.push("/dashboard")}>
           ← Back to Dashboard
         </Button>
       </div>
@@ -112,3 +112,5 @@ ${review.code}
     </main>
   );
 }
+
+
